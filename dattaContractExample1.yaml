@@ -6,7 +6,6 @@ spec:
   version: "1.2.0"
   standardVersion: "2.2.1"
   status: "Development"
-  uuid: "0a1ee77f-d804-45a0-bc36-1076a626de3e"
   username: "postgres"
   type: "tables"
   server: "host.docker.internal"

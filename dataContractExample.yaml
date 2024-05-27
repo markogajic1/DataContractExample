@@ -2,8 +2,9 @@ apiVersion: myexample.com/v1
 kind: DataContract
 metadata:
   name: example2
-name: Example Contract 2
-version: '1.2.0'
-statusIcon: false
-status: active
-description: This is an example data contract on gitHub
+spec:
+  name: Example Contract 2
+  version: '1.2.0'
+  statusIcon: false
+  status: active
+  description: This is an example data contract on gitHub

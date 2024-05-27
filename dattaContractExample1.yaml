@@ -1,4 +1,21 @@
- dataset:
+apiVersion: myexample.com/v1
+kind: DataContract
+metadata:
+  name: example1
+spec:
+  version: "1.2.0"
+  standardVersion: "2.2.1"
+  status: "Development"
+  username: "postgres"
+  type: "tables"
+  server: "host.docker.internal"
+  quantumName: "datacontract"
+  driverVersion: "42.6.0"
+  driver: "org.postgresql.Driver"
+  description: ""
+  datasetName: "datacontract"
+  database: "adventureworks"
+  dataset:
     - table: "department"
       physicalName: "department"
       description: "Lookup table containing the departments within the Adventure Works Cycles company."

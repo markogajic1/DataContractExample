@@ -44,9 +44,8 @@ jobs:
         run: |
           BRANCH=${{ steps.get_info.outputs.branch }}
           COMMIT_ID=${{ steps.get_info.outputs.commit_id }}
-          curl -X POST https://e816-24-135-240-9.ngrok-free.app/v1/data-contracts \
+          curl -X POST  https://f2ed-24-135-240-9.ngrok-free.app/v1/data-contracts \
           -H "Content-Type: multipart/form-data" \
           -F "file=@datacontract.yaml" \
-          -F "version=3.0.0" \
           -F "branch=${BRANCH}" \
           -F "commitId=${COMMIT_ID}"

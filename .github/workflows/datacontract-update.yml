@@ -1,0 +1,47 @@
+name: Update Data Contract
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'  # Ovde se definišu grane koje želiš da pratiš
+    paths:
+      - 'datacontract.yaml'  # Ovaj fajl prati promene na datacontract.yaml
+
+jobs:
+  update-datacontract:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Provera koda iz repozitorijuma
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Provera da li je 'datacontract.yaml' promenjen
+      - name: Check for datacontract.yaml changes
+        id: check_changes
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q "datacontract.yaml"; then
+            echo "Data contract updated."
+          else
+            echo "No changes in datacontract.yaml" && exit 0;
+          fi
+
+      # Ako je datacontract.yaml promenjen, preuzmi granu i commit
+      - name: Get branch and commit info
+        id: get_info
+        run: |
+          echo "::set-output name=branch::$(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
+          echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+
+      # Slanje POST zahteva lokalnom API-ju
+      - name: Send POST request to backend
+        if: steps.check_changes.outputs.datacontract_updated == 'true'
+        run: |
+          BRANCH=${{ steps.get_info.outputs.branch }}
+          COMMIT_ID=${{ steps.get_info.outputs.commit_id }}
+          curl -X POST " https://e816-24-135-240-9.ngrok-free.app/v1/data-contract" \
+          -F "file=@datacontract.yaml" \
+          -F "branch=$BRANCH" \
+          -F "commitId=$COMMIT_ID" \
+          -F "isLive=true"

@@ -1,7 +1,7 @@
 version: 2.0.1
 apiVersion: 2.1.0
 id: 297a42b4-71db-4f96-b9ee-81ccb289dfe6
-tenant: example2
+tenant: example11
 tags:
   - tag1
   - tag2

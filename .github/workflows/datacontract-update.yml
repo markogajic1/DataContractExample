@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-      - 'feature/*'  # Ovde se definišu grane koje želiš da pratiš
+      - 'feature/*'  # Grane koje želiš da pratiš
     paths:
-      - 'datacontract.yaml'  # Ovaj fajl prati promene na datacontract.yaml
+      - 'datacontract.yaml'  # Praćenje izmena na datacontract.yaml
 
 jobs:
   update-datacontract:
@@ -15,28 +15,32 @@ jobs:
     steps:
       # Provera koda iz repozitorijuma
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # Povuci dva commita da bi 'git diff' mogao da funkcioniše
 
       # Provera da li je 'datacontract.yaml' promenjen
       - name: Check for datacontract.yaml changes
         id: check_changes
         run: |
           if git diff --name-only HEAD^ HEAD | grep -q "datacontract.yaml"; then
-            echo "Data contract updated."
+            echo "datacontract_updated=true" >> $GITHUB_ENV
           else
-            echo "No changes in datacontract.yaml" && exit 0;
+            echo "datacontract_updated=false" >> $GITHUB_ENV
           fi
 
-      # Ako je datacontract.yaml promenjen, preuzmi granu i commit
+      # Preuzmi granu i commit informacije
       - name: Get branch and commit info
         id: get_info
         run: |
-          echo "::set-output name=branch::$(echo ${{ github.ref }} | sed 's/refs\/heads\///')"
-          echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+          BRANCH=$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///')
+          echo "::set-output name=branch::${BRANCH}"
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "::set-output name=commit_id::${COMMIT_ID}"
 
       # Slanje POST zahteva lokalnom API-ju
       - name: Send POST request to backend
-        if: steps.check_changes.outputs.datacontract_updated == 'true'
+        if: env.datacontract_updated == 'true'
         run: |
           BRANCH=${{ steps.get_info.outputs.branch }}
           COMMIT_ID=${{ steps.get_info.outputs.commit_id }}
@@ -44,5 +48,5 @@ jobs:
           -H "Content-Type: multipart/form-data" \
           -F "file=@datacontract.yaml" \
           -F "version=3.0.0" \
-          -F "branch=main" \
-          -F "commitId=0000000000000000000000000000000000000000"
+          -F "branch=${BRANCH}" \
+          -F "commitId=${COMMIT_ID}"

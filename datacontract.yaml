@@ -1,0 +1,51 @@
+version: 2.0.0
+apiVersion: 2.1.0
+id: 297a42b4-71db-4f96-b9ee-81ccb289dfe6
+tenant: tenant-example
+tags:
+  - tag1
+  - tag2
+status: Development
+dataProduct: ProductName
+kind: DataContract
+description:
+  usage: Example usage description.
+  purpose: Example purpose description.
+  limitations: Example limitations description.
+schema:
+  - name: table1
+    logicalType: Object
+    physicalType: Table
+    physicalName: table1
+    description: This is a table description.
+    criticalDataElement: true
+    classification: Confidential
+    tags:
+      - schema-tag1
+      - schema-tag2
+    authoritativeDefinitions:
+      - type: definition1
+        url: http://example.com/definition1
+    examples:
+      - example1
+      - example2
+    items: null
+  - name: table2
+    logicalType: Object
+    physicalType: Table
+    physicalName: table2
+    description: Another table description.
+    criticalDataElement: false
+    classification: Public
+    tags:
+      - schema-tag3
+      - schema-tag4
+    authoritativeDefinitions: null
+    examples: []
+    items: null
+contractCreatedTs: 2023-08-26 12:00:00.000 UTC
+customProperties:
+  - property: customProperty1
+    value: customValue1
+  - property: customProperty2
+    value: customValue2
